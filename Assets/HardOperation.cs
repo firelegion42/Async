@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class HardOperation : MonoBehaviour
@@ -36,9 +37,19 @@ public class HardOperation : MonoBehaviour
         Debug.Log("Hard operation is over");
     }
 
-    public void StartAsyncLongoperation()
+    public async void StartAsyncLongoperation()
     {
+        Debug.Log("Hard operation has started");
 
+        await Task.Yield();
+
+        for (int i = 0; i < 10000; i++)
+        {
+            Debug.Log("Created object # " + i);
+            await Task.Yield();
+        }
+
+        Debug.Log("Hard operation is over");
     }
     
      
