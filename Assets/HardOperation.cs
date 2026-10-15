@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -37,19 +39,29 @@ public class HardOperation : MonoBehaviour
         Debug.Log("Hard operation is over");
     }
 
-    public async void StartAsyncLongoperation()
+    public async void StartAsyncLongoperation(CancellationToken cancellationToken)
     {
-        Debug.Log("Hard operation has started");
-
-        await Task.Yield();
-
-        for (int i = 0; i < 10000; i++)
+        try
         {
-            Debug.Log("Created object # " + i);
+            Debug.Log("Hard operation has started");
+
             await Task.Yield();
+
+            for (int i = 0; i < 10000; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                Debug.Log("Created object # " + i);
+                await Task.Yield();
+            }
+
+            Debug.Log("Hard operation is over");
         }
 
-        Debug.Log("Hard operation is over");
+        catch (OperationCanceledException)
+        {
+            Debug.Log("Operation canceled");
+        }
+        
     }
     
      
