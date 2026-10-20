@@ -39,29 +39,18 @@ public class HardOperation : MonoBehaviour
         Debug.Log("Hard operation is over");
     }
 
-    public async void StartAsyncLongoperation(CancellationToken cancellationToken)
+    public async void StartAsyncLongoperation()
     {
-        try
-        {
-            Debug.Log("Hard operation has started");
 
+        Debug.Log("Hard operation has started");
+
+        for (int i = 0; i < 10000; i++)
+        {
+            Debug.Log("Created object # " + i);
             await Task.Yield();
-
-            for (int i = 0; i < 10000; i++)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                Debug.Log("Created object # " + i);
-                await Task.Yield();
-            }
-
-            Debug.Log("Hard operation is over");
         }
 
-        catch (OperationCanceledException)
-        {
-            Debug.Log("Operation canceled");
-        }
-        
+        Debug.Log("Hard operation is over");
     }
     
      
